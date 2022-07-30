@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
+import authRoute from "./routes/AuthRoute.js"
 
 //middlewares
 const app  = express();
@@ -16,3 +17,6 @@ mongoose.connect(process.env.MONGO_URI)
 
 app.listen(process.env.PORT , ()=>console.log(`server is running on port: ${process.env.PORT}`));
 
+//routes
+
+app.use("/auth", authRoute);
