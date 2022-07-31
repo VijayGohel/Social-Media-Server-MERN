@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import authRoute from "./routes/AuthRoute.js"
+import userRoute from "./routes/UserRoute.js"
 
 //middlewares
 const app  = express();
@@ -20,3 +21,4 @@ app.listen(process.env.PORT , ()=>console.log(`server is running on port: ${proc
 //routes
 
 app.use("/auth", authRoute);
+app.use("/user", userRoute);
