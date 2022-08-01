@@ -91,3 +91,73 @@ export const deleteUser = async (req,res)=>{
         res.status(500).json({message: error});
     }
 }
+
+export const followUser = async (req,res)=>{
+    const followUserId = req.params.id;
+    const {followingUserId} = req.body;
+
+    try {
+        if(followUserId == followingUserId)
+        {
+            res.status(403).json("Action forbidden !");
+        }
+        else
+        {
+            const followUser = await UserModel.findById(followUserId);
+            const followingUser = await UserModel.findById(followingUserId);
+
+            if(!followUser)
+            {
+                res.status(404).json("User does not exists !");
+            }
+            else if(!followUser.followers.includes(followingUserId))
+            {
+                await followUser.updateOne({$push : {followers: followingUserId}});
+                await followingUser.updateOne({$push : {following: followUserId}});
+
+                res.status(200).json("User followed !");    
+            }
+            else
+            {
+                res.status(403).json("You already follow this user.");
+            }
+        }
+    } catch (error) {
+        res.status(500).json({message: error});
+    }
+}
+
+export const unfollowUser = async (req,res)=>{
+    const unfollowUserId = req.params.id;
+    const {unfollowingUserId} = req.body;
+
+    try {
+        if(unfollowUserId == unfollowingUserId)
+        {
+            res.status(403).json("Action forbidden !");
+        }
+        else
+        {
+            const unfollowUser = await UserModel.findById(unfollowUserId);
+            const unfollowingUser = await UserModel.findById(unfollowingUserId);
+
+            if(!unfollowUser)
+            {
+                res.status(404).json("User does not exists !");
+            }
+            else if(unfollowUser.followers.includes(unfollowingUserId))
+            {
+                await unfollowUser.updateOne({$pull : {followers: unfollowingUserId}});
+                await unfollowingUser.updateOne({$pull : {following: unfollowUserId}});
+
+                res.status(200).json("User unfollowed !");    
+            }
+            else
+            {
+                res.status(403).json("You do not follow this user.");
+            }
+        }
+    } catch (error) {
+        res.status(500).json({message: error});
+    }
+}
