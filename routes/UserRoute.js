@@ -6,6 +6,7 @@ const router  = express.Router();
 router.get("/:id", getUser)
 .patch("/:id", updateUser)
 .delete("/:id", deleteUser)
-.patch("/follow/:id", followUser)
-.patch("/unfollow/:id", unfollowUser);
+.patch("/:id/follow", followUser)
+.patch("/:id/unfollow", unfollowUser);
+
 export default router;
