@@ -1,5 +1,6 @@
 import UserModel from "../models/User.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export const registerUser = async (req,res) => {
 
@@ -18,10 +19,16 @@ export const registerUser = async (req,res) => {
         else
         {
             const newUser = new UserModel(req.body);
-            await newUser.save();
-            res.status(200).json(newUser);
+            const user = await newUser.save();
+
+            const token = await jwt.sign(
+                {userName: user.userName, id: user._id},
+                process.env.JWT_KEY,
+                {expiresIn: "1h"});
+
+            res.status(200).json({user, token});
         }    
-        
+
     } catch (error) {
         res.status(500).json({message: error});
     }
@@ -38,7 +45,14 @@ export const loginUser = async (req,res)=>{
             const validate = await bcrypt.compare(password , user.password);
 
             if(validate)
-                res.status(200).json(user);
+            {
+                const token = await jwt.sign(
+                    {userName: user.userName, id: user._id},
+                    process.env.JWT_KEY,
+                    {expiresIn: "1h"});
+
+                res.status(200).json({user, token});
+            }
             else
                 res.status(400).json("Password incorrect !"); 
         }
