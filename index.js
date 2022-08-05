@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import authRoute from "./routes/AuthRoute.js"
@@ -11,6 +12,7 @@ const app  = express();
 
 app.use(bodyParser.urlencoded({limit: "30mb", extended: true}));
 app.use(bodyParser.json({limit: "30mb", extended: true}));
+app.use(cors());
 
 dotenv.config({path: './.env'});
 
