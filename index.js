@@ -6,6 +6,7 @@ import bodyParser from "body-parser";
 import authRoute from "./routes/AuthRoute.js"
 import userRoute from "./routes/UserRoute.js"
 import postRoute from "./routes/PostRoute.js"
+import uploadRoute from "./routes/UploadRoute.js"
 
 //middlewares
 const app  = express();
@@ -26,3 +27,4 @@ app.listen(process.env.PORT , ()=>console.log(`server is running on port: ${proc
 app.use("/auth", authRoute);
 app.use("/user", userRoute);
 app.use("/post", postRoute);
+app.use("/upload", uploadRoute);

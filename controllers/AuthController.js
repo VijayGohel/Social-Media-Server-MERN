@@ -21,7 +21,7 @@ export const registerUser = async (req,res) => {
             const newUser = new UserModel(req.body);
             const user = await newUser.save();
 
-            const token = await jwt.sign(
+            const token = jwt.sign(
                 {userName: user.userName, id: user._id},
                 process.env.JWT_KEY,
                 {expiresIn: "1h"});
@@ -46,7 +46,7 @@ export const loginUser = async (req,res)=>{
 
             if(validate)
             {
-                const token = await jwt.sign(
+                const token = jwt.sign(
                     {userName: user.userName, id: user._id},
                     process.env.JWT_KEY,
                     {expiresIn: "1h"});
