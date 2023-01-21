@@ -1,5 +1,6 @@
 import UserModel from "../models/User.js";
 import bcrypt from 'bcrypt';
+import jwt from "jsonwebtoken";
 
 export const getUser = async (req,res)=>{
 
@@ -28,10 +29,10 @@ export const getUser = async (req,res)=>{
 export const updateUser = async (req,res)=>{
     const id = req.params.id;
 
-    const {currentUserId, isCurrentUserAdmin, password} = req.body;
+    const {_id, isCurrentUserAdmin, password} = req.body;
 
     try {
-        if(currentUserId == id || isCurrentUserAdmin)
+        if(_id == id || isCurrentUserAdmin)
         {
             let user = await UserModel.findById(id);
 
@@ -43,9 +44,17 @@ export const updateUser = async (req,res)=>{
                     req.body.password = await bcrypt.hash(password, salt);
                 }
 
-                await UserModel.updateOne(req.body);
+                const user = await UserModel.findByIdAndUpdate(id, req.body, {
+                    new: true,
+                });
+
+                const token = jwt.sign(
+                    { username: user.username, id: user._id },
+                    process.env.JWT_KEY,
+                    { expiresIn: "1h" }
+                );
                 
-                res.status(200).json(await UserModel.findById(id));
+                res.status(200).json({user, token});
             }
             else
             {
