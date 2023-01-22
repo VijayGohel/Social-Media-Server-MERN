@@ -116,7 +116,7 @@ export const deleteUser = async (req,res)=>{
 
 export const followUser = async (req,res)=>{
     const followUserId = req.params.id;
-    const {followingUserId} = req.body;
+    const followingUserId = req.body._id;
 
     try {
         if(followUserId == followingUserId)
@@ -151,7 +151,7 @@ export const followUser = async (req,res)=>{
 
 export const unfollowUser = async (req,res)=>{
     const unfollowUserId = req.params.id;
-    const {unfollowingUserId} = req.body;
+    const unfollowingUserId = req.body._id;
 
     try {
         if(unfollowUserId == unfollowingUserId)
